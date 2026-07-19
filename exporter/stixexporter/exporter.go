@@ -3,6 +3,9 @@ package stixexporter
 import (
 	"context"
 
+	"github.com/qensus-labs/go-stix/stix"
+	stixotel "github.com/qensus-labs/go-stix/stix/mapping/otel"
+
 	"go.opentelemetry.io/collector/consumer"
 	"go.opentelemetry.io/collector/exporter"
 	"go.opentelemetry.io/collector/exporter/exporterhelper"
@@ -38,8 +41,40 @@ func (e *logsExporter) consumeLogs(
 	logs plog.Logs,
 ) error {
 
-	// Commit 4:
-	// Convert plog.Logs into STIX objects.
+	builder := stix.NewBuilder()
 
-	return nil
+	resourceLogs := logs.ResourceLogs()
+
+	for i := 0; i < resourceLogs.Len(); i++ {
+
+		scopeLogs := resourceLogs.At(i).ScopeLogs()
+
+		for j := 0; j < scopeLogs.Len(); j++ {
+
+			logRecords := scopeLogs.At(j).LogRecords()
+
+			for k := 0; k < logRecords.Len(); k++ {
+
+				record := logRecords.At(k)
+
+				obs := stixotel.FromLogRecord(
+					record,
+				)
+
+				err := stixotel.MapObservation(
+					builder,
+					obs,
+				)
+
+				if err != nil {
+					return err
+				}
+			}
+		}
+	}
+
+	// Validate that a STIX bundle can be generated.
+	_, err := builder.JSON()
+
+	return err
 }

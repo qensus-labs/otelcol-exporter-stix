@@ -3,6 +3,7 @@ module github.com/qensus-labs/otelcol-exporter-stix
 go 1.26.5
 
 require (
+	github.com/qensus-labs/go-stix v0.0.0-00010101000000-000000000000
 	go.opentelemetry.io/collector/component v1.62.0
 	go.opentelemetry.io/collector/consumer v1.62.0
 	go.opentelemetry.io/collector/exporter v1.62.0
@@ -16,6 +17,7 @@ require (
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/go-viper/mapstructure/v2 v2.5.0 // indirect
 	github.com/gobwas/glob v0.2.3 // indirect
+	github.com/google/uuid v1.6.0 // indirect
 	github.com/hashicorp/go-version v1.9.0 // indirect
 	github.com/hashicorp/golang-lru/v2 v2.0.7 // indirect
 	github.com/json-iterator/go v1.1.12 // indirect
@@ -54,3 +56,5 @@ require (
 	google.golang.org/protobuf v1.36.11 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
+
+replace github.com/qensus-labs/go-stix => ../go-stix

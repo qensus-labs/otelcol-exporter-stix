@@ -7,7 +7,7 @@ import (
 	"go.opentelemetry.io/collector/exporter"
 )
 
-const typeStr = "stix"
+var typeStr = component.MustNewType("stix")
 
 // NewFactory creates a new STIX exporter factory.
 func NewFactory() exporter.Factory {
