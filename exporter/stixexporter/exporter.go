@@ -2,6 +2,7 @@ package stixexporter
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/qensus-labs/go-stix/stix"
 	stixotel "github.com/qensus-labs/go-stix/stix/mapping/otel"
@@ -13,6 +14,7 @@ import (
 )
 
 type logsExporter struct {
+	output string
 }
 
 func newLogsExporter(
@@ -21,7 +23,9 @@ func newLogsExporter(
 	cfg *Config,
 ) (exporter.Logs, error) {
 
-	exp := &logsExporter{}
+	exp := &logsExporter{
+		output: cfg.Output,
+	}
 
 	return exporterhelper.NewLogs(
 		ctx,
@@ -73,8 +77,25 @@ func (e *logsExporter) consumeLogs(
 		}
 	}
 
-	// Validate that a STIX bundle can be generated.
-	_, err := builder.JSON()
+	data, err := builder.JSON()
 
-	return err
+	if err != nil {
+		return err
+	}
+
+	switch e.output {
+
+	case "", "stdout":
+
+		fmt.Println(string(data))
+
+	default:
+
+		return fmt.Errorf(
+			"unsupported STIX output: %s",
+			e.output,
+		)
+	}
+
+	return nil
 }
