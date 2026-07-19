@@ -2,7 +2,7 @@ package stixexporter
 
 import (
 	"context"
-	"fmt"
+	"io"
 
 	"github.com/qensus-labs/go-stix/stix"
 	stixotel "github.com/qensus-labs/go-stix/stix/mapping/otel"
@@ -14,7 +14,7 @@ import (
 )
 
 type logsExporter struct {
-	output string
+	writer io.Writer
 }
 
 func newLogsExporter(
@@ -23,8 +23,16 @@ func newLogsExporter(
 	cfg *Config,
 ) (exporter.Logs, error) {
 
+	writer, err := createWriter(
+		cfg.Output,
+	)
+
+	if err != nil {
+		return nil, err
+	}
+
 	exp := &logsExporter{
-		output: cfg.Output,
+		writer: writer,
 	}
 
 	return exporterhelper.NewLogs(
@@ -83,19 +91,7 @@ func (e *logsExporter) consumeLogs(
 		return err
 	}
 
-	switch e.output {
+	_, err = e.writer.Write(data)
 
-	case "", "stdout":
-
-		fmt.Println(string(data))
-
-	default:
-
-		return fmt.Errorf(
-			"unsupported STIX output: %s",
-			e.output,
-		)
-	}
-
-	return nil
+	return err
 }

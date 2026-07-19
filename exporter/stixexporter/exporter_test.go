@@ -1,6 +1,7 @@
 package stixexporter
 
 import (
+	"bytes"
 	"context"
 	"testing"
 
@@ -37,8 +38,10 @@ func TestConsumeLogsCreatesSTIXBundle(t *testing.T) {
 		1234,
 	)
 
+	var buffer bytes.Buffer
+
 	exporter := &logsExporter{
-		output: "stdout",
+		writer: &buffer,
 	}
 
 	err := exporter.consumeLogs(
@@ -48,5 +51,22 @@ func TestConsumeLogsCreatesSTIXBundle(t *testing.T) {
 
 	if err != nil {
 		t.Fatal(err)
+	}
+
+	if buffer.Len() == 0 {
+		t.Fatal("expected STIX bundle output")
+	}
+
+	output := buffer.String()
+
+	if !bytes.Contains(
+		buffer.Bytes(),
+		[]byte(`"type": "bundle"`),
+	) {
+
+		t.Fatalf(
+			"expected STIX bundle JSON, got: %s",
+			output,
+		)
 	}
 }
