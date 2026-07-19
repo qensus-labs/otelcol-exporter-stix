@@ -24,7 +24,7 @@ func newLogsExporter(
 ) (exporter.Logs, error) {
 
 	sender, err := createSender(
-		cfg.Output,
+		cfg,
 	)
 
 	if err != nil {

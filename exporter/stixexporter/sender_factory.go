@@ -1,18 +1,25 @@
 package stixexporter
 
+import (
+	"fmt"
+
+	"github.com/qensus-labs/otelcol-exporter-stix/exporter/stixexporter/taxii"
+)
+
 func createSender(
-	output string,
+	cfg *Config,
 ) (Sender, error) {
 
-	switch output {
+	switch cfg.Mode {
 
 	case "", "stdout":
+
 		return newStdoutSender(), nil
 
-	default:
+	case "file":
 
 		sender, err := newFileSender(
-			output,
+			cfg.Output,
 		)
 
 		if err != nil {
@@ -20,5 +27,18 @@ func createSender(
 		}
 
 		return sender, nil
+
+	case "taxii":
+
+		return taxii.NewSender(
+			cfg.TAXII,
+		), nil
+
+	default:
+
+		return nil, fmt.Errorf(
+			"unsupported STIX sender mode: %s",
+			cfg.Mode,
+		)
 	}
 }

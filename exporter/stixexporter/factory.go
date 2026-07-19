@@ -24,7 +24,9 @@ func NewFactory() exporter.Factory {
 
 func createDefaultConfig() component.Config {
 
-	return &Config{}
+	return &Config{
+		Mode: "stdout",
+	}
 }
 
 func createLogsExporter(
