@@ -7,7 +7,7 @@ import (
 
 func TestCreateWriterStdout(t *testing.T) {
 
-	writer, err := createWriter(
+	writer, closer, err := createWriter(
 		"stdout",
 	)
 
@@ -20,11 +20,17 @@ func TestCreateWriterStdout(t *testing.T) {
 			"expected stdout writer",
 		)
 	}
+
+	if closer != nil {
+		t.Fatal(
+			"stdout should not have a closer",
+		)
+	}
 }
 
 func TestCreateWriterDefault(t *testing.T) {
 
-	writer, err := createWriter(
+	writer, closer, err := createWriter(
 		"",
 	)
 
@@ -37,6 +43,12 @@ func TestCreateWriterDefault(t *testing.T) {
 			"expected default writer to be stdout",
 		)
 	}
+
+	if closer != nil {
+		t.Fatal(
+			"stdout should not have a closer",
+		)
+	}
 }
 
 func TestCreateWriterFile(t *testing.T) {
@@ -45,7 +57,7 @@ func TestCreateWriterFile(t *testing.T) {
 
 	defer os.Remove(path)
 
-	writer, err := createWriter(
+	writer, closer, err := createWriter(
 		path,
 	)
 
@@ -59,7 +71,13 @@ func TestCreateWriterFile(t *testing.T) {
 		)
 	}
 
-	_, ok := writer.(*os.File)
+	if closer == nil {
+		t.Fatal(
+			"expected file closer",
+		)
+	}
+
+	file, ok := writer.(*os.File)
 
 	if !ok {
 		t.Fatal(
@@ -67,6 +85,20 @@ func TestCreateWriterFile(t *testing.T) {
 		)
 	}
 
-	// Cleanup open file handle.
-	writer.(*os.File).Close()
+	err = closer.Close()
+
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	// Verify the file is closed.
+	_, err = file.Write(
+		[]byte("test"),
+	)
+
+	if err == nil {
+		t.Fatal(
+			"expected closed file",
+		)
+	}
 }

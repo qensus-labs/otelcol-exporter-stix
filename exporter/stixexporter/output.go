@@ -5,12 +5,15 @@ import (
 	"os"
 )
 
-func createWriter(output string) (io.Writer, error) {
+func createWriter(
+	output string,
+) (io.Writer, io.Closer, error) {
 
 	switch output {
 
 	case "", "stdout":
-		return os.Stdout, nil
+
+		return os.Stdout, nil, nil
 
 	default:
 
@@ -21,9 +24,9 @@ func createWriter(output string) (io.Writer, error) {
 		)
 
 		if err != nil {
-			return nil, err
+			return nil, nil, err
 		}
 
-		return file, nil
+		return file, file, nil
 	}
 }

@@ -7,6 +7,7 @@ import (
 	"github.com/qensus-labs/go-stix/stix"
 	stixotel "github.com/qensus-labs/go-stix/stix/mapping/otel"
 
+	"go.opentelemetry.io/collector/component"
 	"go.opentelemetry.io/collector/consumer"
 	"go.opentelemetry.io/collector/exporter"
 	"go.opentelemetry.io/collector/exporter/exporterhelper"
@@ -15,6 +16,7 @@ import (
 
 type logsExporter struct {
 	writer io.Writer
+	closer io.Closer
 }
 
 func newLogsExporter(
@@ -23,7 +25,7 @@ func newLogsExporter(
 	cfg *Config,
 ) (exporter.Logs, error) {
 
-	writer, err := createWriter(
+	writer, closer, err := createWriter(
 		cfg.Output,
 	)
 
@@ -33,6 +35,7 @@ func newLogsExporter(
 
 	exp := &logsExporter{
 		writer: writer,
+		closer: closer,
 	}
 
 	return exporterhelper.NewLogs(
@@ -46,6 +49,27 @@ func newLogsExporter(
 			},
 		),
 	)
+}
+
+func (e *logsExporter) Start(
+	ctx context.Context,
+	host component.Host,
+) error {
+
+	return nil
+}
+
+func (e *logsExporter) Shutdown(
+	ctx context.Context,
+) error {
+
+	if e.closer != nil {
+
+		return e.closer.Close()
+
+	}
+
+	return nil
 }
 
 func (e *logsExporter) consumeLogs(
