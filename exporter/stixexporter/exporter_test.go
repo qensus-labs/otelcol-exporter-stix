@@ -8,6 +8,25 @@ import (
 	"go.opentelemetry.io/collector/pdata/plog"
 )
 
+type bufferSender struct {
+	buffer bytes.Buffer
+}
+
+func (s *bufferSender) Send(
+	ctx context.Context,
+	data []byte,
+) error {
+
+	_, err := s.buffer.Write(data)
+
+	return err
+}
+
+func (s *bufferSender) Close() error {
+
+	return nil
+}
+
 func TestConsumeLogsCreatesSTIXBundle(t *testing.T) {
 
 	logs := plog.NewLogs()
@@ -38,10 +57,10 @@ func TestConsumeLogsCreatesSTIXBundle(t *testing.T) {
 		1234,
 	)
 
-	var buffer bytes.Buffer
+	sender := &bufferSender{}
 
 	exporter := &logsExporter{
-		writer: &buffer,
+		sender: sender,
 	}
 
 	err := exporter.consumeLogs(
@@ -53,14 +72,16 @@ func TestConsumeLogsCreatesSTIXBundle(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	if buffer.Len() == 0 {
-		t.Fatal("expected STIX bundle output")
+	if sender.buffer.Len() == 0 {
+		t.Fatal(
+			"expected STIX bundle output",
+		)
 	}
 
-	output := buffer.String()
+	output := sender.buffer.String()
 
 	if !bytes.Contains(
-		buffer.Bytes(),
+		sender.buffer.Bytes(),
 		[]byte(`"type": "bundle"`),
 	) {
 

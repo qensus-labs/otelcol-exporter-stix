@@ -19,8 +19,9 @@ func TestLogsExporterShutdownClosesFile(t *testing.T) {
 	defer os.Remove(path)
 
 	exp := &logsExporter{
-		writer: file,
-		closer: file,
+		sender: &fileSender{
+			file: file,
+		},
 	}
 
 	err = exp.Shutdown(

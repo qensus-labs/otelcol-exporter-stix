@@ -2,7 +2,6 @@ package stixexporter
 
 import (
 	"context"
-	"io"
 
 	"github.com/qensus-labs/go-stix/stix"
 	stixotel "github.com/qensus-labs/go-stix/stix/mapping/otel"
@@ -15,8 +14,7 @@ import (
 )
 
 type logsExporter struct {
-	writer io.Writer
-	closer io.Closer
+	sender Sender
 }
 
 func newLogsExporter(
@@ -25,7 +23,7 @@ func newLogsExporter(
 	cfg *Config,
 ) (exporter.Logs, error) {
 
-	writer, closer, err := createWriter(
+	sender, err := createSender(
 		cfg.Output,
 	)
 
@@ -34,8 +32,7 @@ func newLogsExporter(
 	}
 
 	exp := &logsExporter{
-		writer: writer,
-		closer: closer,
+		sender: sender,
 	}
 
 	return exporterhelper.NewLogs(
@@ -63,9 +60,9 @@ func (e *logsExporter) Shutdown(
 	ctx context.Context,
 ) error {
 
-	if e.closer != nil {
+	if e.sender != nil {
 
-		return e.closer.Close()
+		return e.sender.Close()
 
 	}
 
@@ -115,7 +112,8 @@ func (e *logsExporter) consumeLogs(
 		return err
 	}
 
-	_, err = e.writer.Write(data)
-
-	return err
+	return e.sender.Send(
+		ctx,
+		data,
+	)
 }
