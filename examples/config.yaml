@@ -1,0 +1,8 @@
+exporters:
+  stix:
+    output: stdout
+
+service:
+  pipelines:
+    logs:
+      exporters: [stix]
