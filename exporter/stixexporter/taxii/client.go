@@ -33,7 +33,7 @@ func (c *Client) Send(
 	req, err := http.NewRequestWithContext(
 		ctx,
 		http.MethodPost,
-		c.config.URL,
+		c.config.ObjectsEndpoint(),
 		bytes.NewReader(data),
 	)
 
@@ -46,7 +46,14 @@ func (c *Client) Send(
 		"application/taxii+json;version=2.1",
 	)
 
-	if c.config.Username != "" {
+	if c.config.APIKey != "" {
+
+		req.Header.Set(
+			"Authorization",
+			"Bearer "+c.config.APIKey,
+		)
+
+	} else if c.config.Username != "" {
 
 		req.SetBasicAuth(
 			c.config.Username,
