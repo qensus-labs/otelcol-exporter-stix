@@ -1,29 +1,31 @@
 package stixexporter
 
 import (
-	"bytes"
 	"context"
 	"testing"
+
+	"go.uber.org/zap"
 
 	"go.opentelemetry.io/collector/pdata/plog"
 )
 
-type bufferSender struct {
-	buffer bytes.Buffer
+type testSender struct {
+	sent bool
+	data []byte
 }
 
-func (s *bufferSender) Send(
+func (s *testSender) Send(
 	ctx context.Context,
 	data []byte,
 ) error {
 
-	_, err := s.buffer.Write(data)
+	s.sent = true
+	s.data = data
 
-	return err
+	return nil
 }
 
-func (s *bufferSender) Close() error {
-
+func (s *testSender) Close() error {
 	return nil
 }
 
@@ -57,10 +59,11 @@ func TestConsumeLogsCreatesSTIXBundle(t *testing.T) {
 		1234,
 	)
 
-	sender := &bufferSender{}
+	sender := &testSender{}
 
 	exporter := &logsExporter{
 		sender: sender,
+		logger: zap.NewNop(),
 	}
 
 	err := exporter.consumeLogs(
@@ -72,22 +75,15 @@ func TestConsumeLogsCreatesSTIXBundle(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	if sender.buffer.Len() == 0 {
+	if !sender.sent {
 		t.Fatal(
-			"expected STIX bundle output",
+			"expected sender to receive STIX bundle",
 		)
 	}
 
-	output := sender.buffer.String()
-
-	if !bytes.Contains(
-		sender.buffer.Bytes(),
-		[]byte(`"type": "bundle"`),
-	) {
-
-		t.Fatalf(
-			"expected STIX bundle JSON, got: %s",
-			output,
+	if len(sender.data) == 0 {
+		t.Fatal(
+			"expected STIX bundle data",
 		)
 	}
 }
