@@ -1,0 +1,37 @@
+{
+  "/discovery": {
+    "title": "Some TAXII Server",
+    "description": "This TAXII Server contains a listing of",
+    "contact": "string containing contact information",
+    "default": "http://localhost:5000/trustgroup1/",
+    "api_roots": [
+      "http://localhost:5000/trustgroup1/"
+    ]
+  },
+  "trustgroup1": {
+    "information": {
+      "title": "Malware Research Group",
+      "description": "A trust group setup for malware researchers",
+      "versions": [
+        "application/taxii+json;version=2.1"
+      ],
+      "max_content_length": 9765625
+    },
+    "status": [],
+    "collections": [
+      {
+        "id": "91a7b528-80eb-42ed-a74d-c6fbd5a26116",
+        "title": "High Value Indicator Collection",
+        "description": "This data collection is for collecting high value IOCs",
+        "can_read": true,
+        "can_write": true,
+        "media_types": [
+          "application/stix+json;version=2.0",
+          "application/stix+json;version=2.1"
+        ],
+        "objects": [],
+        "manifest": []
+      }
+    ]
+  }
+}
