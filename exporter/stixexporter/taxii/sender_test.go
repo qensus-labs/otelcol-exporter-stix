@@ -29,8 +29,10 @@ func TestConfigEndpoints(t *testing.T) {
 		CollectionID: "collection-id",
 	}
 
+	// TAXII 2.1 serves Discovery at /taxii2/ on the server root,
+	// not below the API Root.
 	if got := config.DiscoveryEndpoint(); got !=
-		"https://taxii.example.com/taxii2/root/discovery" {
+		"https://taxii.example.com/taxii2/" {
 
 		t.Fatalf(
 			"unexpected discovery endpoint: %s",

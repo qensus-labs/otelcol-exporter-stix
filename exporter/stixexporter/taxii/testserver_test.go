@@ -26,7 +26,7 @@ func NewTestServer(t *testing.T) *TestServer {
 	mux := http.NewServeMux()
 
 	mux.HandleFunc(
-		"/taxii2/root/discovery",
+		"/taxii2/{$}",
 		func(w http.ResponseWriter, r *http.Request) {
 
 			ts.DiscoveryCalled = true
