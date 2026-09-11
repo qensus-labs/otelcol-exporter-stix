@@ -1,13 +1,23 @@
 package taxii
 
-import "fmt"
+import (
+	"fmt"
+	"net/url"
+)
 
+// DiscoveryEndpoint returns the Discovery URL, which TAXII 2.1
+// serves at /taxii2/ on the host of the API Root.
 func (c Config) DiscoveryEndpoint() string {
 
-	return fmt.Sprintf(
-		"%s/discovery",
-		c.APIRoot,
-	)
+	apiRoot, err := url.Parse(c.APIRoot)
+
+	if err != nil {
+		return ""
+	}
+
+	return apiRoot.ResolveReference(
+		&url.URL{Path: "/taxii2/"},
+	).String()
 }
 
 func (c Config) CollectionsEndpoint() string {

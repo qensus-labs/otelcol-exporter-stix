@@ -1,0 +1,21 @@
+name: otelcol-stix-e2e
+
+services:
+  medallion:
+    build: ./medallion
+    ports:
+      - "9088:5000"
+
+  collector:
+    build:
+      context: ..
+      dockerfile: integration/collector/Dockerfile
+      additional_contexts:
+        go-stix: ../../go-stix
+    volumes:
+      - ./collector/config.yaml:/etc/otelcol/config.yaml:ro
+    ports:
+      - "4318:4318"
+    depends_on:
+      medallion:
+        condition: service_healthy

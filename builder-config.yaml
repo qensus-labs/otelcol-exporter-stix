@@ -1,0 +1,16 @@
+dist:
+  name: otelcol-stix
+  description: OpenTelemetry Collector with the STIX exporter
+  output_path: ./build
+
+receivers:
+  - gomod: go.opentelemetry.io/collector/receiver/otlpreceiver v0.156.0
+
+exporters:
+  - gomod: github.com/qensus-labs/otelcol-exporter-stix v0.0.0
+    import: github.com/qensus-labs/otelcol-exporter-stix/exporter/stixexporter
+    path: .
+
+# Copied verbatim into build/go.mod, so paths are relative to output_path.
+replaces:
+  - github.com/qensus-labs/go-stix => ../../go-stix

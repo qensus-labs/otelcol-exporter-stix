@@ -49,6 +49,11 @@ func (c *Client) doRequest(
 	}
 
 	req.Header.Set(
+		"Accept",
+		ContentTypeTAXII21,
+	)
+
+	req.Header.Set(
 		"Content-Type",
 		ContentTypeTAXII21,
 	)

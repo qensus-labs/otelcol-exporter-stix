@@ -1,0 +1,20 @@
+receivers:
+  otlp:
+    protocols:
+      http:
+        endpoint: 0.0.0.0:4318
+
+exporters:
+  stix:
+    mode: taxii
+    taxii:
+      api_root: http://medallion:5000/trustgroup1
+      collection_id: 91a7b528-80eb-42ed-a74d-c6fbd5a26116
+      username: admin
+      password: Password01
+
+service:
+  pipelines:
+    logs:
+      receivers: [otlp]
+      exporters: [stix]
