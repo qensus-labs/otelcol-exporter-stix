@@ -102,7 +102,19 @@ func NewTestServer(t *testing.T) *TestServer {
 		},
 	)
 
-	ts.Server = httptest.NewServer(mux)
+	// Like real TAXII 2.1 servers (e.g. Medallion), reject requests
+	// that don't accept TAXII responses.
+	ts.Server = httptest.NewServer(
+		http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+
+			if r.Header.Get("Accept") != ContentTypeTAXII21 {
+				w.WriteHeader(http.StatusNotAcceptable)
+				return
+			}
+
+			mux.ServeHTTP(w, r)
+		}),
+	)
 
 	return ts
 }
