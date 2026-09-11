@@ -5,10 +5,12 @@ go 1.26.5
 require (
 	github.com/qensus-labs/go-stix v0.0.0-00010101000000-000000000000
 	go.opentelemetry.io/collector/component v1.62.0
+	go.opentelemetry.io/collector/confmap v1.62.0
 	go.opentelemetry.io/collector/consumer v1.62.0
 	go.opentelemetry.io/collector/exporter v1.62.0
 	go.opentelemetry.io/collector/exporter/exporterhelper v0.156.0
 	go.opentelemetry.io/collector/pdata v1.62.0
+	go.uber.org/zap v1.28.0
 )
 
 require (
@@ -33,7 +35,6 @@ require (
 	go.opentelemetry.io/collector/client v1.62.0 // indirect
 	go.opentelemetry.io/collector/config/configoptional v1.62.0 // indirect
 	go.opentelemetry.io/collector/config/configretry v1.62.0 // indirect
-	go.opentelemetry.io/collector/confmap v1.62.0 // indirect
 	go.opentelemetry.io/collector/confmap/xconfmap v0.156.0 // indirect
 	go.opentelemetry.io/collector/consumer/consumererror v0.156.0 // indirect
 	go.opentelemetry.io/collector/extension v1.62.0 // indirect
@@ -48,7 +49,6 @@ require (
 	go.opentelemetry.io/otel/metric v1.44.0 // indirect
 	go.opentelemetry.io/otel/trace v1.44.0 // indirect
 	go.uber.org/multierr v1.11.0 // indirect
-	go.uber.org/zap v1.28.0 // indirect
 	go.yaml.in/yaml/v3 v3.0.4 // indirect
 	golang.org/x/sys v0.45.0 // indirect
 	google.golang.org/genproto/googleapis/rpc v0.0.0-20260414002931-afd174a4e478 // indirect
