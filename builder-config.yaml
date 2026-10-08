@@ -1,0 +1,9 @@
+dist:
+  name: otelcol-stix
+  description: OpenTelemetry Collector with STIX exporter
+  version: 0.1.0
+  output_path: ./build
+
+exporters:
+  - gomod: github.com/qensus-labs/otelcol-exporter-stix v0.2.0
+    path: .
