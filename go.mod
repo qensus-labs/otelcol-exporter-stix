@@ -1,6 +1,6 @@
 module github.com/qensus-labs/otelcol-exporter-stix
 
-go 1.26.5
+go 1.27.1
 
 require (
 	github.com/qensus-labs/go-stix v0.2.0

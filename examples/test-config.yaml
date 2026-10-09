@@ -1,0 +1,16 @@
+receivers:
+  filelog:
+    include: ["/tmp/hello.log"]
+    start_at: beginning
+
+exporters:
+  stix:
+    mode: stdout
+
+service:
+  pipelines:
+    logs:
+      receivers:
+        - filelog
+      exporters:
+        - stix

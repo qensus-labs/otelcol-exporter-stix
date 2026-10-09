@@ -5,5 +5,7 @@ dist:
   output_path: ./build
 
 exporters:
-  - gomod: github.com/qensus-labs/otelcol-exporter-stix v0.2.0
-    path: .
+  - gomod: github.com/qensus-labs/otelcol-exporter-stix v0.1.0
+    import: github.com/qensus-labs/otelcol-exporter-stix/exporter/stixexporter
+    name: stixexporter
+    path: . 
