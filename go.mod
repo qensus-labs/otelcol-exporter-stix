@@ -3,7 +3,7 @@ module github.com/qensus-labs/otelcol-exporter-stix
 go 1.27.1
 
 require (
-	github.com/qensus-labs/go-stix v0.2.0
+	github.com/qensus-labs/go-stix v0.2.1
 	go.opentelemetry.io/collector/component v1.62.0
 	go.opentelemetry.io/collector/consumer v1.62.0
 	go.opentelemetry.io/collector/exporter v1.62.0
