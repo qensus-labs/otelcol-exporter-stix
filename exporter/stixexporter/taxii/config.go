@@ -16,5 +16,8 @@ type Config struct {
 	Password string
 
 	// Optional bearer token.
+	BearerToken string
+
+	// Optional APIKey
 	APIKey string
 }

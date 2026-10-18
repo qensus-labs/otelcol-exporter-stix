@@ -8,9 +8,9 @@ import (
 func newTestClient(server *TestServer) *Client {
 
 	return NewClient(Config{
-		APIRoot:      server.Server.URL + "/taxii2/root",
+		APIRoot:      server.Server.URL + "/taxii2/root/",
 		CollectionID: "collection-id",
-		APIKey:       "test-token",
+		BearerToken:  "test-token",
 	})
 }
 

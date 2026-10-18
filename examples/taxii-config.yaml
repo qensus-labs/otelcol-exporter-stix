@@ -1,0 +1,24 @@
+receivers:
+  file_log:
+    include:
+      - /tmp/hello.log
+    start_at: beginning
+    operators:
+      - type: json_parser
+        parse_from: body
+
+exporters:
+  stix:
+    mode: taxii
+    taxii:
+      APIRoot: http://127.0.0.1:9080/trustgroup1/
+      CollectionID: 91a7b528-80eb-42ed-a74d-c6fbd5a26116 
+      BearerToken: "sandbox_12345"
+
+service:
+  pipelines:
+    logs:
+      receivers:
+        - file_log
+      exporters:
+        - stix

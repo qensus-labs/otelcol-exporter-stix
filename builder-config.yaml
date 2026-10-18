@@ -8,4 +8,8 @@ exporters:
   - gomod: github.com/qensus-labs/otelcol-exporter-stix v0.1.0
     import: github.com/qensus-labs/otelcol-exporter-stix/exporter/stixexporter
     name: stixexporter
-    path: . 
+    path: .
+
+receivers:
+  - gomod: github.com/open-telemetry/opentelemetry-collector-contrib/receiver/filelogreceiver v0.156.0
+ 

@@ -26,7 +26,7 @@ func NewTestServer(t *testing.T) *TestServer {
 	mux := http.NewServeMux()
 
 	mux.HandleFunc(
-		"/taxii2/root/discovery",
+		"/taxii2/",
 		func(w http.ResponseWriter, r *http.Request) {
 
 			ts.DiscoveryCalled = true
@@ -45,7 +45,7 @@ func NewTestServer(t *testing.T) *TestServer {
 				Discovery{
 					Title: "Test TAXII Server",
 					APIRoots: []string{
-						"https://example.com/taxii2/root",
+						"https://example.com/taxii2/root/",
 					},
 				},
 			)
@@ -53,7 +53,7 @@ func NewTestServer(t *testing.T) *TestServer {
 	)
 
 	mux.HandleFunc(
-		"/taxii2/root/collections",
+		"/taxii2/root/collections/",
 		func(w http.ResponseWriter, r *http.Request) {
 
 			ts.CollectionsCalled = true

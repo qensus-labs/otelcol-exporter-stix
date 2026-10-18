@@ -10,6 +10,7 @@ import (
 
 const (
 	ContentTypeTAXII21 = "application/taxii+json;version=2.1"
+	AcceptTAXII21      = "application/taxii+json;version=2.1"
 )
 
 type Client struct {
@@ -53,11 +54,23 @@ func (c *Client) doRequest(
 		ContentTypeTAXII21,
 	)
 
+	req.Header.Set(
+		"Accept",
+		AcceptTAXII21,
+	)
+
 	if c.config.APIKey != "" {
 
 		req.Header.Set(
+			"X-API-Key",
+			c.config.APIKey,
+		)
+
+	} else if c.config.BearerToken != "" {
+
+		req.Header.Set(
 			"Authorization",
-			"Bearer "+c.config.APIKey,
+			"Bearer "+c.config.BearerToken,
 		)
 
 	} else if c.config.Username != "" {

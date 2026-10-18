@@ -6,11 +6,11 @@ func TestNewSender(t *testing.T) {
 
 	sender := NewSender(
 		Config{
-			APIRoot: "https://taxii.example.com/taxii2/root",
+			APIRoot: "https://taxii.example.com/taxii2/root/",
 
 			CollectionID: "12345678-abcd-1234-abcd-123456789",
 
-			APIKey: "test-token",
+			BearerToken: "test-token",
 		},
 	)
 
@@ -24,13 +24,13 @@ func TestNewSender(t *testing.T) {
 func TestConfigEndpoints(t *testing.T) {
 
 	config := Config{
-		APIRoot: "https://taxii.example.com/taxii2/root",
+		APIRoot: "https://taxii.example.com/taxii2/root/",
 
 		CollectionID: "collection-id",
 	}
 
 	if got := config.DiscoveryEndpoint(); got !=
-		"https://taxii.example.com/taxii2/root/discovery" {
+		"https://taxii.example.com/taxii2/" {
 
 		t.Fatalf(
 			"unexpected discovery endpoint: %s",
@@ -39,7 +39,7 @@ func TestConfigEndpoints(t *testing.T) {
 	}
 
 	if got := config.CollectionsEndpoint(); got !=
-		"https://taxii.example.com/taxii2/root/collections" {
+		"https://taxii.example.com/taxii2/root/collections/" {
 
 		t.Fatalf(
 			"unexpected collections endpoint: %s",
